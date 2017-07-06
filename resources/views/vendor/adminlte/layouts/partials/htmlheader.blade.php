@@ -14,6 +14,7 @@
     <script src="{{ asset('js/jquery/jquery.form.js')}}"></script>
     <script src="{{ asset('js/ckeditor/ckeditor.js')}}"></script>
     <script src="{{ asset('daterangepicker/moment.min.js')}}"></script>
+    <script src="{{ asset('js/locale/locales.js')}}"></script>
     <script src="{{ asset('daterangepicker/daterangepicker.js')}}"></script>
     <script src="{{ asset('js/tools.js')}}"></script>
     <script src="{{ asset('js/tinymce/tinymce.min.js')}}"></script>

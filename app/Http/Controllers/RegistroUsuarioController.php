@@ -94,10 +94,22 @@ class RegistroUsuarioController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rol= Rol::findOrFail($request->input('rol'));
+        
+    }
 
-        $usuario= DB::table('users')->where('id',$id)->update(['tipo' => $rol->rol]);
-        $usuario= DB::table('users')->where('id',$id)->update(['estado' => 'activo']);
+    /**
+     * funcion para activar los usuarios de la base de datos
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function activarUsuario(Request $request)
+    {
+        $rol= Rol::findOrFail($request->id_rol);
+
+        $usuario= DB::table('users')->where('id',$request->id)->update(['tipo' => $rol->rol]);
+        $usuario= DB::table('users')->where('id',$request->id)->update(['estado' => 'activo']);
+
+        $user= Usuario::findOrFail($request->id);
 
         
         $tr= DB::table('tareas_roles')->select('tareas_roles.*')->where('tareas_roles.id_rol', '=', $rol->id_rol)->get();
@@ -110,14 +122,14 @@ class RegistroUsuarioController extends Controller
             for($i=0; $i < count($tr); $i++) { 
 
             
-                $array[$i]= ['id_tarea'=>$tr[$i]->id_tarea, 'id_usuario'=>$id];   
+                $array[$i]= ['id_tarea'=>$tr[$i]->id_tarea, 'id_usuario'=>$request->id];   
             }
 
 
             UsuarioTarea::insert($array);
         }
 
-        return redirect()->route('registrousuario.index');
+        return response()->json($user);
     }
 
     /**
@@ -128,9 +140,20 @@ class RegistroUsuarioController extends Controller
      */
     public function destroy($id)
     {
-        $funcion = Usuario::findOrFail($id);
-        $funcion->delete();
-        return redirect()->route('registrousuario.index');
+
+    }
+
+    /**
+     * funcion para eliminar un usuario de la base de datos
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function eliminarUsuario(Request $request)
+    {
+        $user = Usuario::findOrFail($request->id);
+        $user->delete();
+
+        return response()->json($user);
     }
 
     /**

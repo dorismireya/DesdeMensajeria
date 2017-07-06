@@ -33,91 +33,25 @@
                     <!-- Menu toggle button -->
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-envelope-o"></i>
-                        <span class="label label-success">4</span>
+                        <span class="mensajes_cantidad label label-success"></span>
                     </a>
-                    <ul class="dropdown-menu">
-                        <li class="header">{{ trans('adminlte_lang::message.tabmessages') }}</li>
-                        <li>
-                            <!-- inner menu: contains the messages -->
-                            <ul class="menu">
-                                <li><!-- start message -->
-                                    <a href="#">
-                                        <div class="pull-left">
-                                            <!-- User Image -->
-                                            <img src="{{ Gravatar::get($user->email) }}" class="img-circle" alt="User Image"/>
-                                        </div>
-                                        <!-- Message title and timestamp -->
-                                        <h4>
-                                            {{ trans('adminlte_lang::message.supteam') }}
-                                            <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                                        </h4>
-                                        <!-- The message -->
-                                        <p>{{ trans('adminlte_lang::message.awesometheme') }}</p>
-                                    </a>
-                                </li><!-- end message -->
-                            </ul><!-- /.menu -->
-                        </li>
-                        <li class="footer"><a href="#">c</a></li>
+                    <ul class="mensajes_contenedor dropdown-menu">
+                        <!-- /.cargamos por ajax -->
                     </ul>
                 </li><!-- /.messages-menu -->
 
                 <!-- Notifications Menu -->
-                <li class="dropdown notifications-menu">
+                <li class="registro_usuarios dropdown notifications-menu">
                     <!-- Menu toggle button -->
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
-                        <span class="label label-warning">10</span>
+                        <span class="registros_cantidad label label-warning"></span>
                     </a>
-                    <ul class="dropdown-menu">
-                        <li class="header">{{ trans('adminlte_lang::message.notifications') }}</li>
-                        <li>
-                            <!-- Inner Menu: contains the notifications -->
-                            <ul class="menu">
-                                <li><!-- start notification -->
-                                    <a href="#">
-                                        <i class="fa fa-users text-aqua"></i> {{ trans('adminlte_lang::message.newmembers') }}
-                                    </a>
-                                </li><!-- end notification -->
-                            </ul>
-                        </li>
-                        <li class="footer"><a href="#">{{ trans('adminlte_lang::message.viewall') }}</a></li>
+                    <ul class="registros_contenedor dropdown-menu">
+                        <!-- /.cargamos por ajax -->
                     </ul>
                 </li>
-                <!-- Tasks Menu -->
-                <li class="dropdown tasks-menu">
-                    <!-- Menu Toggle Button -->
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-flag-o"></i>
-                        <span class="label label-danger">9</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="header">{{ trans('adminlte_lang::message.tasks') }}</li>
-                        <li>
-                            <!-- Inner menu: contains the tasks -->
-                            <ul class="menu">
-                                <li><!-- Task item -->
-                                    <a href="#">
-                                        <!-- Task title and progress text -->
-                                        <h3>
-                                            {{ trans('adminlte_lang::message.tasks') }}
-                                            <small class="pull-right">20%</small>
-                                        </h3>
-                                        <!-- The progress bar -->
-                                        <div class="progress xs">
-                                            <!-- Change the css width attribute to simulate progress -->
-                                            <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                                <span class="sr-only">20% {{ trans('adminlte_lang::message.complete') }}</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li><!-- end task item -->
-                            </ul>
-                        </li>
-                        <li class="footer">
-                            <a href="#">{{ trans('adminlte_lang::message.alltasks') }}</a>
-                        </li>
-                    </ul>
-                </li>
+                
                 @if (Auth::guest())
                     <li><a href="{{ url('/register') }}">{{ trans('adminlte_lang::message.register') }}</a></li>
                     <li><a href="{{ url('/login') }}">{{ trans('adminlte_lang::message.login') }}</a></li>
@@ -211,6 +145,7 @@
 
                     <div id="lista_usuario">
                     </div>
+                    <br>
 
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="m_asunto">Asunto:</label>
@@ -243,38 +178,46 @@
 </div>
 
 
+
+<div id="viewMensaje_Modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="mensaje_asunto modal-title"></h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="box-body no-padding">
+                    <div class="mailbox-read-info">
+                        <h5 class="view_por"></h5>
+                    </div>
+                    <div class="view_mensaje mailbox-read-message">
+                    </div>
+                    <div class="mailbox-read-info_etiqueta">
+                        <h5 class="view_recep"></h5>
+                    </div>
+                </div>
+                <input type="hidden" id="view_id_mensaje" value="">
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="mensaje_modificar btn btn-primary" style="display: none">Modificar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 <script type="text/javascript">
 
 var lista_para= [];
     
 $(document).on('click','.nuevo_mensaje-modal', function(){
 
-    lista_para= [];
-    $('#lista_usuario').replaceWith("<div id='lista_usuario'></div>");
-
-    $.ajax({
-
-        type: 'post',
-        url: 'listar_usuarios_mensaje',
-        data: {
-            '_token': $('input[name=_token]').val(),
-        },
-        success: function(data){
-
-            var cadena="";
-            for(i=0; i < data.length; i++){
-
-                cadena= cadena + "<option id='op"+data[i].id+"' value='"+data[i].id+"' data-name='"+data[i].name+"'>"+data[i].name+"</option>";
-            }
-
-            cadena= "<select class='form-control' id='select_para'><option disabled selected id='op' value=''>-- seleccionar remitente --</option>"+cadena+"</select>";
-
-            $('#select_para').replaceWith(cadena);
-
-            $('#nuevoMensaje_Modal').modal('show');   
-        }
-
-    });
+    nuevoMensaje(0);
     
 });
 
@@ -287,9 +230,7 @@ $(document).on('click','#select_para', function(){
     
         lista_para.push($("#select_para").val());
 
-        console.log('entra ',$("#select_para").val(), 'array', lista_para.length);
-
-        $('#lista_usuario').append("<a id='a"+$("#select_para").val()+"' class='quitar btn btn-default' data-id='"+$("#select_para").val()+"' data-name='"+$("#op"+$("#select_para").val()).data('name')+"'><i class='fa fa-close'></i> "+$("#op"+$("#select_para").val()).data('name')+"</a>&nbsp;");
+        $('#lista_usuario').append("<a id='a"+$("#select_para").val()+"' class='quitar btn btn-default btn-xs' data-id='"+$("#select_para").val()+"' data-name='"+$("#op"+$("#select_para").val()).data('name')+"'><i class='fa fa-close'></i> "+$("#op"+$("#select_para").val()).data('name')+"</a>&nbsp;");
 
         $('#op'+$("#select_para").val()).replaceWith('');
 
@@ -328,8 +269,238 @@ $(document).on('click','#b_enviar', function(){
         document.getElementById("m_asunto").focus();
         return;
     }
+
+
+    $.ajax({
+
+        type: 'post',
+        url: 'guardar_usuarios_mensaje',
+        data: {
+            '_token': $('input[name=_token]').val(),
+            'asunto': $("#m_asunto").val(),
+            'mensaje': tinyMCE.get('p_contenido').getContent(),
+            'lista': lista_para,
+        },
+        success: function(data){
+            
+            if(data.errors){
+                console.log('error al insertar el mensaje');
+            }else{
+
+                
+
+                swal("Mensaje Creado", "El mensaje "+data.asunto+", fue creado con exito", "success");
+            }
+        }
+    });
+
+    $('#nuevoMensaje_Modal').modal('hide');
     
 });
+
+$(document).ready(function() {
+
+   loadMensajes();
+});
+
+
+$(document).on('click', '.a_view', function(){
+
+    var id_md= $(this).data('id_md');
+
+    moment.locale('es');
+
+    $('.mensaje_modificar').hide('400');
+    $('.mensaje_asunto').text("Asunto: "+$(this).data('asunto'));
+    $('.view_por').text("De: "+$(this).data('por'));
+    $('.view_mensaje').html($(this).data('mensaje'));
+    $('.view_recep').text(moment($(this).data('fecha'), 'YYYY-MM-DD h:mm:ss').format('LLLL'));
+    $('#view_id_mensaje').val($(this).data('id_mensaje'));
+
+    $('#viewMensaje_Modal').modal('show');
+
+
+    $.ajax({
+
+        type: 'post',
+        url: 'updateVisto',
+        data: {
+            '_token': $('input[name=_token]').val(),
+            'id_md': id_md,
+        },
+        success: function(data){
+            
+            if(data.errors){
+                console.log('error al poner en visto el mensaje');
+            }else{
+
+                loadMensajes();
+            }
+        }
+    });
+});
+
+$(document).on('click', '.mensaje_modificar', function(){
+
+    //console.log('entra', $('#view_id_mensaje').val());
+
+    $('#viewMensaje_Modal').modal('hide');
+
+    nuevoMensaje($('#view_id_mensaje').val());
+});
+
+
+function nuevoMensaje(id_mensaje){
+
+    lista_para= [];
+    $('#lista_usuario').replaceWith("<div id='lista_usuario'></div>");
+    $('#m_asunto').val('');
+    tinymce.activeEditor.setContent('');
+
+    $.ajax({
+
+        type: 'post',
+        url: 'listar_usuarios_mensaje',
+        data: {
+            '_token': $('input[name=_token]').val(),
+            'id_mensaje': id_mensaje,
+        },
+        success: function(data){
+
+            if(data.usuario.estado != 'activo'){
+                swal("Acceso denegado", "Usted no esta habilitado, para enviar mensajes. Pongase en contacto con su Administrador", "error");
+                return;
+            }
+
+            var cadena="";
+            for(i=0; i < data.lista.length; i++){
+
+                temp_existe= false;
+
+                for(j=0; j < data.mensaje.length; j++){
+
+                    if(data.lista[i].id == data.mensaje[j].id_destino)
+                        temp_existe= true;
+                }
+
+                if(!temp_existe)
+                    cadena= cadena + "<option id='op"+data.lista[i].id+"' value='"+data.lista[i].id+"' data-name='"+data.lista[i].name+"'>"+data.lista[i].name+"</option>";
+            }
+
+            cadena= "<select class='form-control' id='select_para'><option disabled selected id='op' value=''>-- seleccionar remitente --</option>"+cadena+"</select>";
+
+            $('#select_para').replaceWith(cadena);
+
+            
+
+            if(data.mensaje.length != 0){
+
+                for(i=0; i < data.mensaje.length; i++){
+
+                    $('#lista_usuario').append("<a id='a"+data.mensaje[i].id_destino+"' class='quitar btn btn-default btn-xs' data-id='"+data.mensaje[i].id_destino+"' data-name='"+data.mensaje[i].name+"'><i class='fa fa-close'></i> "+data.mensaje[i].name+"</a>&nbsp;");
+                    lista_para.push(data.mensaje[i].id_destino);
+                }
+
+                $('#m_asunto').val(data.mensaje[0].asunto);
+                if(data.mensaje[0].mensaje != null)
+                    tinymce.activeEditor.setContent(data.mensaje[0].mensaje);
+            }
+
+
+            $('#nuevoMensaje_Modal').modal('show');
+        }
+
+    });
+}
+
+function loadMensajes(){
+
+    $.ajax({
+
+        type: 'post',
+        url: 'listar_mensajes',
+        data: {
+            '_token': $('input[name=_token]').val(),
+        },
+        success: function(data){
+
+
+            if(data.tarea_valida[0].cantidad == 1){
+                $('.registro_usuarios').show(200);
+                $('.registros_cantidad').text(data.usuarios.length);
+
+                var concatenar= "";
+
+                user_max= data.usuarios.length;
+
+                if(user_max > 5)
+                    user_max= 5;
+
+                for(i=0; i< user_max; i++){
+
+                    concatenar= concatenar+"<li>";
+                    concatenar= concatenar+"<ul class='menu'>";
+                    concatenar= concatenar+"<li>";
+                    concatenar= concatenar+"<a href='{{route('adminRegistrosUsuarios')}}'>";
+                    concatenar= concatenar+"<i class='fa fa-users text-aqua'></i>"+data.usuarios[i].name;
+                    concatenar= concatenar+"</a>";
+                    concatenar= concatenar+"</li>";
+                    concatenar= concatenar+"</ul>";
+                    concatenar= concatenar+"</li>";
+                }
+
+
+                concatenar= "<li class='header'>Tiene "+data.usuarios.length+" registros</li>"+concatenar;
+                concatenar= concatenar + "<li class='footer'><a href='{{route('adminRegistrosUsuarios')}}'>Ver Registros de Usuarios</a></li></ul>";
+
+                concatenar= "<ul class='registros_contenedor dropdown-menu'>"+concatenar;
+
+                $('.registros_contenedor').replaceWith(concatenar);   
+
+
+            }else $('.registro_usuarios').hide(400);
+
+            $('.mensajes_cantidad').text(data.lista.length);
+
+            var cadena= "";
+
+            max= data.lista.length;
+
+            if(max > 5)
+                max= 5;
+
+            for(i=0; i < max; i++){
+
+                cadena= cadena+"<li id='id_m"+data.lista[i].id_mensaje+"'>";
+                cadena= cadena+"<ul class='menu'>";
+                cadena= cadena+"<li>";
+                cadena= cadena+"<a class='a_view' data-toggle='tooltip' data-id_mensaje='"+data.lista[i].id_mensaje+"' data-id_md='"+data.lista[i].id_md+"' data-por='"+data.lista[i].name+"' data-asunto='"+data.lista[i].asunto+"' data-mensaje='"+data.lista[i].mensaje+"' data-fecha='"+data.lista[i].fecha+"'>";
+                cadena= cadena+"<div class='pull-left'><i class='fa fa-envelope-o'></i></div>";
+                cadena= cadena+"<h4>";
+
+                cadena= cadena+data.lista[i].name;
+                
+                cadena= cadena+"<p>"+data.lista[i].asunto+"</p>";
+                cadena= cadena+"</h4>";
+                moment.locale('es');
+                cadena= cadena+"<small><i class='fa fa-clock-o'></i> "+moment(data.lista[i].fecha, 'YYYY-MM-DD h:mm:ss').fromNow()+"</small>";
+                cadena= cadena+"</a>";
+                cadena= cadena+"</li>";
+                cadena= cadena+"</ul>";
+                cadena= cadena+"</li>";
+
+            }
+
+            cadena= cadena+"<li class='footer'><a href='{{route('getMensajes')}}'><i class='glyphicon glyphicon-inbox'></i>Ver Mensajes Recibidos</a></li>";
+            cadena= cadena+"<li class='footer'><a href='{{route('getMensajesEnviados')}}'><i class='glyphicon glyphicon-send'></i>Ver Mensajes Enviados</a></li></ul>";
+
+            cadena= "<ul class='mensajes_contenedor dropdown-menu'>"+cadena;
+
+            $('.mensajes_contenedor').replaceWith(cadena);   
+        }
+
+    });
+}
 
 </script>
 
@@ -337,7 +508,7 @@ $(document).on('click','#b_enviar', function(){
   var editor_config = {
     path_absolute : "/",
     language: 'es',
-    height: 200,
+    height: 150,
     selector: "textarea.my-editor",
     plugins: [
       "advlist autolink lists link image charmap print preview hr anchor pagebreak",

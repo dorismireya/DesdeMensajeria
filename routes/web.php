@@ -44,6 +44,17 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::get('home', 'HomeController@index');
 Route::post('listar_usuarios_mensaje','HomeController@listar_usuarios_mensaje');
+Route::post('guardar_usuarios_mensaje','HomeController@guardar_usuarios_mensaje');
+Route::post('listar_mensajes','HomeController@listar_mensajes');
+Route::post('updateVisto','HomeController@updateVisto');
+
+Route::get('getMail/{id_mensaje}', 'ViewMailController@getMail')->name('getMail');
+
+Route::get('getMensajes', 'BuzonController@index')->name('getMensajes');
+Route::get('mensajesSearch', 'BuzonController@search')->name('mensajeSearch');
+
+Route::get('getMensajesEnviados', 'BuzonEnviadosController@index')->name('getMensajesEnviados');
+Route::get('mensajesEnviadosSearch', 'BuzonEnviadosController@search')->name('mensajesEnviadosSearch');
 
 
 Route::get('adminFuncion', 'FuncionController@index');
@@ -82,8 +93,10 @@ Route::resource('tareasusuarios','TareasUsuariosController');
 
 
 //rutas para registro usuarios
-Route::get('adminRegistrosUsuarios', 'RegistroUsuarioController@index');
+Route::get('adminRegistrosUsuarios', 'RegistroUsuarioController@index')->name('adminRegistrosUsuarios');
 Route::get('registrosUsuariosSearch', 'RegistroUsuarioController@search')->name('registrosUsuariosSearch');
+Route::post('activarUsuario','RegistroUsuarioController@activarUsuario');
+Route::post('eliminarUsuario','RegistroUsuarioController@eliminarUsuario');
 Route::resource('registrousuario','RegistroUsuarioController');
 
 
