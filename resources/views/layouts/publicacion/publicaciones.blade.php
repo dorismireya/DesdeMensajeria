@@ -3,14 +3,14 @@
   <div class="container">
     <div class="row">
     <!-- Start about us area -->
-    <div class="col-lg-6 col-md-6 col-sm-6">
+    <div class="col-lg-5 col-md-5 col-sm-5">
       <div class="aboutus_area wow fadeInLeft">
 
         {!!$facultad->historia!!}
         
       </div>
     </div>
-    <div class="col-lg-6 col-md-6 col-sm-6">
+    <div class="col-lg-7 col-md-7 col-sm-7">
       
       <div class="newsfeed_area wow fadeInRight">
         <ul class="nav nav-tabs feed_tabs_publicacion" id="myTab2">
@@ -44,7 +44,7 @@
                         <span class="feed_detalle"> {{$np->detalle}}</span>
                         <br>
                         <span class="bs-noticias-fecha"><i class="fa fa-calendar"></i> Del {{Carbon\Carbon::parse($np->fecha_inicio)->format('d/m/Y')}} al {{Carbon\Carbon::parse($np->fecha_fin)->format('d/m/Y')}}</span>
-                        <a href="#" class="bs-noticias-area">Tipo: {{$np->tipo}}</i></a>
+                        <a href="{{route('all_publicacion_search',['buscar'=>'', 'tipo'=>$np->tipo])}}" class="bs-noticias-area">Tipo: {{$np->tipo}}</i></a>
                     </div>
                   </li>
 
