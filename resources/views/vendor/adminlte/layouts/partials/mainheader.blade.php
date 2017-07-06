@@ -355,7 +355,7 @@ function nuevoMensaje(id_mensaje){
     lista_para= [];
     $('#lista_usuario').replaceWith("<div id='lista_usuario'></div>");
     $('#m_asunto').val('');
-    tinymce.activeEditor.setContent('');
+    tinyMCE.activeEditor.setContent('');
 
     $.ajax({
 

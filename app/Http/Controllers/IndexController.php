@@ -45,7 +45,8 @@ class IndexController extends Controller
 
             $publicaciones= DB::table('fpublicaciones')
             ->join('importancias', 'fpublicaciones.id_importancia', 'importancias.id_importancia')
-            ->select('fpublicaciones.*')
+            ->join('ftipo_publicaciones', 'fpublicaciones.id_ftp', 'ftipo_publicaciones.id_ftp')
+            ->select('fpublicaciones.*', 'ftipo_publicaciones.tipo as tipo')
             ->where('fpublicaciones.estado', '=', 'publicado')
             ->where('fpublicaciones.tabla', '=', 'facultad')
             ->where('fpublicaciones.id_tabla', '=', $facultad->id_facultad)
@@ -64,12 +65,12 @@ class IndexController extends Controller
             foreach ($publicaciones as $pos => $publicacion) {
 
                 $tag_html= $tag_html."<li>";
-                $tag_html= $tag_html."<div class='media'>";
-                $tag_html= $tag_html."<div class='media-body'>";
-                $tag_html= $tag_html."<a href='".route('publicacion_completa',['id_fpublicacion'=>$publicacion->id_fpublicacion])."'>".$publicacion->titulo."'</a>";
+                $tag_html= $tag_html."<div class='media bs-noticias bs-noticias-".$publicacion->tabla."'>";
+                $tag_html= $tag_html."<a href='".route('publicacion_completa',['id_fpublicacion'=>$publicacion->id_fpublicacion])."'><i class='fa fa-book'>".$publicacion->titulo."</i></a>";
+                $tag_html= $tag_html."<a href='".route('all_publicacion_search',['buscar'=>'', 'tabla'=>$publicacion->tabla, 'id_tabla'=>$publicacion->id_tabla])."' class='bs-noticias-area'><i class='fa fa-university'> ".$publicacion->area."</i></a>";
                 $tag_html= $tag_html."<span class='feed_detalle'>".$publicacion->detalle."</span><br>";
-                $tag_html= $tag_html."<span class='feed_date'>Del: ".Carbon::parse($publicacion->fecha_inicio)->format('d/m/Y')." al: ".Carbon::parse($publicacion->fecha_fin)->format('d/m/Y')."</span>";
-                $tag_html= $tag_html."</div>";
+                $tag_html= $tag_html."<span class='bs-noticias-fecha'><i class='fa fa-calendar'></i>Del: ".Carbon::parse($publicacion->fecha_inicio)->format('d/m/Y')." al: ".Carbon::parse($publicacion->fecha_fin)->format('d/m/Y')."</span>";
+                $tag_html= $tag_html."<a href='".route('all_publicacion_search',['buscar'=>'', 'tipo'=>$publicacion->tipo])."' class='bs-noticias-area'>Tipo: ".$publicacion->tipo."</i></a>";
                 $tag_html= $tag_html."</div>";
                 $tag_html= $tag_html."</li>";
 
