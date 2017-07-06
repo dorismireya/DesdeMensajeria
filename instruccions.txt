@@ -1,0 +1,104 @@
+======================================INSTRUCCIONES LARAVEL===================================
+
+composer create-project --prefer-dist laravel/laravel new_project  => crear un nuevo proyecto desde 0
+composer update => cargar dependencias de un proyecto
+
+
+templete adminLTE ver 5.1.4
+
+php artisan serve => correr un server virtual en localhost:8000
+
+php artisan migrate => crear las tablas en una base de datos
+php artisan db:seed => crea contenido en la base de datos
+php artisan key:generate => genera un key al sistema en un nuevo proyecto
+
+php artisan make:controller crear_controller --resource => crear un controlador con su crud
+php artisan make:model crear_modelo                     => crear un modelo de bd
+php artisan make:model crear_modelo -m                  =>crear un modelo y la migracion para el miso
+php artisan make:request name_request                   => crear un validador
+php artisan make:migration crear_tabla_NameTabla        => crear una tabla
+
+======================================== ESTRUCTURA DE LARAVEL 5.4 =================================
+
+app/Http/Controllers  => Ruta de Controllers
+app/Modelos           => Ruta de Modelos
+resources/views       => Ruta de las vistas
+database/migrations   => Ruta de la estructura de la base de datos
+database/seeds        => Ruta de generadores de contenido en la base de datos
+routes                => Ruta de las rutas
+
+
+
+======================================== LENGUAJE LARAVEL ===========================================
+
+ciclo for
+
+@foreach($users as $user)
+	{{$user=>id}}
+@endforeach
+
+@foreach($users as $puntero =>$user)
+	{{$user=>id}}
+@endforeach
+//puntero, es el indicador de donde se encuntra en el array
+
+condicionante if
+
+@if(true)
+@else
+@endif
+
+//if en una sola linea de evaluacion
+{{$user->nombre === 'mireya' ? 'si' : 'no'}}
+
+
+======================================== CAMBIAR IDIOMA DE MENSAJES LARAVEL ====================================
+
+https://github.com/Laraveles/lang-spanish
+
+Copiar a resourse/lang
+
+cambiar en app/config 'locale' => 'es',
+
+
+=================================================================================================================
+
+correr laravel en diferente puerto
+php artisan serve --port=8001 -> el puerto que se quiera
+
+
+//era para llamar a las publicaciones de facultad
+@foreach($facultades as $facultad)
+
+		<div class="col-md-12">
+              <div class="box box-success">
+                <div class="box-header with-border">
+                  <h3 class="box-title">{{$facultad->facultad}}</h3>
+                  <div class="box-tools pull-right">
+                    <a class="btn btn-success" href="{{route('adminPublicacionFacultad',['id_facultad'=>$facultad->id_facultad])}}">
+            			<i class="fa fa-eye"></i> Ver
+      				</a>
+                  </div><!-- /.box-tools -->
+                </div><!-- /.box-header -->
+              </div><!-- /.box -->
+            </div><!-- /.col -->
+	@endforeach
+
+
+
+//llama a todas las publicaciones
+@foreach($facultades as $facultad)
+
+    <div class="col-md-12">
+              <div class="box box-success">
+                <div class="box-header with-border">
+                  <h3 class="box-title">{{$facultad->facultad}}</h3>
+                  <div class="box-tools pull-right">
+                    <a class="btn btn-success" href="{{route('adminAllPublicacionFacultad',['id_facultad'=>$facultad->id_facultad])}}">
+                  <i class="fa fa-eye"></i> Ver
+              </a>
+                  </div><!-- /.box-tools -->
+                </div><!-- /.box-header -->
+              </div><!-- /.box -->
+            </div><!-- /.col -->
+  @endforeach
